@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Envoyer un meme</title>
+</head>
+<body>
+  <h1>Balance un meme 🎉</h1>
+  <input type="text" id="url" placeholder="Lien image / gif / mp4">
+  <button id="send">Envoyer</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "TON_API_KEY",
+      authDomain: "TON_PROJET.firebaseapp.com",
+      databaseURL: "https://TON_PROJET.firebaseio.com",
+      projectId: "TON_PROJET",
+      storageBucket: "TON_PROJET.appspot.com",
+      messagingSenderId: "XXXXXXXX",
+      appId: "1:XXXXXXXX:web:XXXXXXXX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    document.getElementById("send").onclick = () => {
+      const url = document.getElementById("url").value;
+      if (url) {
+        set(ref(db, "overlay/current"), url);
+        document.getElementById("url").value = "";
+      }
+    };
+  </script>
+</body>
+</html>
