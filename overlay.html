@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Live Meme Overlay</title>
+  <style>
+    body {
+      margin: 0;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    img, video {
+      max-width: 80%;
+      max-height: 80%;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+</head>
+<body>
+  <div id="display"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+    // ⚡ Mets tes infos Firebase ici
+    const firebaseConfig = {
+      apiKey: "TON_API_KEY",
+      authDomain: "TON_PROJET.firebaseapp.com",
+      databaseURL: "https://TON_PROJET.firebaseio.com",
+      projectId: "TON_PROJET",
+      storageBucket: "TON_PROJET.appspot.com",
+      messagingSenderId: "XXXXXXXX",
+      appId: "1:XXXXXXXX:web:XXXXXXXX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const display = document.getElementById("display");
+
+    onValue(ref(db, "overlay/current"), (snapshot) => {
+      const url = snapshot.val();
+      if (!url) return;
+
+      display.innerHTML = "";
+      if (url.match(/\.(mp4|webm)$/)) {
+        let vid = document.createElement("video");
+        vid.src = url;
+        vid.autoplay = true;
+        vid.loop = false;
+        display.appendChild(vid);
+      } else {
+        let img = document.createElement("img");
+        img.src = url;
+        display.appendChild(img);
+      }
+    });
+  </script>
+</body>
+</html>
